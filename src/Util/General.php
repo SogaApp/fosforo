@@ -22,10 +22,6 @@ final class General {
     {
         static $instance = null;
         if(!$instance) {
-<<<<<<< HEAD
-=======
-            echo "Instanciado...<br>";
->>>>>>> 4c28e3f348ce6d9988ae40b231c246a9ab84530d
             $instance = new General();
         }
         return $instance;
