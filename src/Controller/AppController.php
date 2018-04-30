@@ -62,8 +62,16 @@ class AppController extends Controller
      */
     public function testUtils()
     {
+<<<<<<< HEAD
 
         echo General::get()->getRoot();
+=======
+        var_dump(General::get()->getRoot());
+        echo General::get()->getEdad() . "<br>";
+        var_dump(General::get()->sayHello("Jako"));
+        General::get()->setEdad(30);
+        echo General::get()->getEdad() . "<br>";
+>>>>>>> 4c28e3f348ce6d9988ae40b231c246a9ab84530d
         exit();
     }
 
