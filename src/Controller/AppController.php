@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Util\General;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -54,6 +55,19 @@ class AppController extends Controller
         var_dump($resp);
         die();
 
+    }
+
+    /**
+     * @Route("/test/utils", name="test_utils")
+     */
+    public function testUtils()
+    {
+        var_dump(General::get()->getRoot());
+        echo General::get()->getEdad() . "<br>";
+        var_dump(General::get()->sayHello("Jako"));
+        General::get()->setEdad(30);
+        echo General::get()->getEdad() . "<br>";
+        exit();
     }
 
 }
