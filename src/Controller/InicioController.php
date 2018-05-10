@@ -21,8 +21,15 @@ class InicioController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         $em->getRepository(Factura::class)->miMetodo();
+        return $this->redirect($this->generateUrl('saludo'));
+    }
+
+    /**
+     * @Route("/saludo", name="saludo")
+     */
+    public function saludo() {
         return $this->render('inicio.html.twig', array(
-            'number' => "hola",
+            'number' => "saludo",
         ));
     }
 
