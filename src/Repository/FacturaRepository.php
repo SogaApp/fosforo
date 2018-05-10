@@ -15,5 +15,9 @@ class FacturaRepository extends ServiceEntityRepository
         parent::__construct($registry, Factura::class);
     }
 
-
+    public function miMetodo(): string
+    {
+        echo "hola mundo";
+        return "respuesta";
+    }
 }
