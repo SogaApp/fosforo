@@ -63,10 +63,12 @@ class FacturaDetalle
 
     /**
      * @param mixed $codigoFacturaDetallePk
+     * @return FacturaDetalle
      */
-    public function setCodigoFacturaDetallePk($codigoFacturaDetallePk): void
+    public function setCodigoFacturaDetallePk($codigoFacturaDetallePk)
     {
         $this->codigoFacturaDetallePk = $codigoFacturaDetallePk;
+        return $this;
     }
 
     /**
@@ -79,10 +81,12 @@ class FacturaDetalle
 
     /**
      * @param mixed $codigoFacturaFk
+     * @return FacturaDetalle
      */
-    public function setCodigoFacturaFk($codigoFacturaFk): void
+    public function setCodigoFacturaFk($codigoFacturaFk)
     {
         $this->codigoFacturaFk = $codigoFacturaFk;
+        return $this;
     }
 
     /**
@@ -95,10 +99,12 @@ class FacturaDetalle
 
     /**
      * @param mixed $cantidad
+     * @return FacturaDetalle
      */
-    public function setCantidad($cantidad): void
+    public function setCantidad($cantidad)
     {
         $this->cantidad = $cantidad;
+        return $this;
     }
 
     /**
@@ -111,10 +117,12 @@ class FacturaDetalle
 
     /**
      * @param mixed $item
+     * @return FacturaDetalle
      */
-    public function setItem($item): void
+    public function setItem($item)
     {
         $this->item = $item;
+        return $this;
     }
 
     /**
@@ -127,10 +135,12 @@ class FacturaDetalle
 
     /**
      * @param mixed $vrPrecio
+     * @return FacturaDetalle
      */
-    public function setVrPrecio($vrPrecio): void
+    public function setVrPrecio($vrPrecio)
     {
         $this->vrPrecio = $vrPrecio;
+        return $this;
     }
 
     /**
@@ -143,10 +153,12 @@ class FacturaDetalle
 
     /**
      * @param mixed $vrSubtotal
+     * @return FacturaDetalle
      */
-    public function setVrSubtotal($vrSubtotal): void
+    public function setVrSubtotal($vrSubtotal)
     {
         $this->vrSubtotal = $vrSubtotal;
+        return $this;
     }
 
     /**
@@ -159,10 +171,12 @@ class FacturaDetalle
 
     /**
      * @param mixed $vrTotal
+     * @return FacturaDetalle
      */
-    public function setVrTotal($vrTotal): void
+    public function setVrTotal($vrTotal)
     {
         $this->vrTotal = $vrTotal;
+        return $this;
     }
 
     /**
@@ -175,10 +189,12 @@ class FacturaDetalle
 
     /**
      * @param mixed $facturaRel
+     * @return FacturaDetalle
      */
-    public function setFacturaRel($facturaRel): void
+    public function setFacturaRel($facturaRel)
     {
         $this->facturaRel = $facturaRel;
+        return $this;
     }
 
 }

@@ -18,35 +18,98 @@
     </style>
 
     <div class="example-wrapper">
-        <h1>Hello {{ controller_name }}! ✅</h1>
+        <h1>Factura No: <span style="color: red">{{ arFactura.numero }}! </span></h1>
 
         This friendly message is coming from:
-        <ul>
-            <li>Your controller at <code><a href="{{ 'src/Controller/FacturaController.php'|file_link(0) }}">src/Controller/FacturaController.php</a></code>
-            </li>
-            <li>Your template at <code><a href="{{ 'templates/factura/index.html.twig'|file_link(0) }}">templates/factura/index.html.twig</a></code>
-            </li>
-        </ul>
 
-        <table border="1">
+        <table border="1" id="tabla-detalles">
             <thead>
+            <th>Codigo</th>
             <th>ITEM</th>
             <th>CANT</th>
             <th>PRECIO</th>
             <th>SUBTOTAL</th>
             <th>TOTAL</th>
             </thead>
-            <tbody>
+            <tbody id="tabla-detalles">
             {% for arFacturasDetalles in arFacturasDetalles %}
-                <tr>
-                    <td>P</td>
-                    <td>P</td>
-                    <td>P</td>
-                    <td>P</td>
-                    <td>P</td>
+                <tr data-id="{{ arFacturasDetalles.codigoFacturaDetallePk }}">
+                    <td>{{ arFacturasDetalles.codigoFacturaDetallePk  }}</td>
+                    <td>{{ arFacturasDetalles.item }}</td>
+                    <td>{{ arFacturasDetalles.cantidad }}</td>
+                    <td>{{ arFacturasDetalles.vrPrecio }}</td>
+                    <td>{{ arFacturasDetalles.vrSubtotal }}</td>
+                    <td>{{ arFacturasDetalles.vrTotal }}</td>
                 </tr>
             {% endfor %}
             </tbody>
         </table>
     </div>
+    <div>
+        <p><input type="text" id="codigo-item"></p>
+        <p>
+            <button id="agregar-item">
+                Agregar
+            </button>
+        </p>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        var codigoFactura = '{{ arFactura.codigoFacturaPk }}';
+        var endpoint = "http://localhost/fosforo/public/index.php/api/factura/detalle/agregar/" + codigoFactura;
+        $(function() {
+
+            var button = $("#agregar-item");
+            var input = $("#codigo-item");
+            button.click(function() {
+                agregarItem(input.val());
+            });
+            /**
+             * Hacemos que el input escuche cuando presionan la tecla enter del teclado.
+             */
+            input.keydown(function (event) {
+                if(event.keyCode === 13) {
+                    agregarItem(input.val());
+                }
+            });
+        });
+
+        var agregarItem = function(codigoItem) {
+            $.ajax(endpoint, {
+                type: 'POST',
+                data: {
+                    detalle: JSON.stringify({
+                        item: codigoItem,
+                    }),
+                }
+            }).done(function(respuesta) { // Se dispara este evento cuando el ajax ha finalizado.
+                if(respuesta && !respuesta.error) {
+                    agregarDetalleATabla(respuesta.detalle);
+                } else if(respuesta && respuesta.error === true && respuesta.yaAgregado === true) {
+                    alert(respuesta.mensaje);
+                    agregarDetalleATabla(respuesta.detalle);
+                } else {
+                    alert("Ocurrió un error al guardar el detalle");
+                }
+                $("#codigo-item").val("").focus();
+            });
+        };
+
+        var agregarDetalleATabla = function(detalle) {
+            /* Agregamos el detalle solo si este no fue agregado ya */
+            if($("[data-id='" + detalle.codigo + "']").length > 0) {
+                return false;
+            }
+            var columnas = Object.keys(detalle);
+            var tr = $("<tr/>", {"data-id": detalle.codigo});
+            for(var i = 0; i < columnas.length; i ++) {
+                tr.append($("<td/>").text(detalle[columnas[i]]));
+            }
+            var cuerpoTabla = $("#tabla-detalles");
+            cuerpoTabla.append(tr);
+        };
+    </script>
 {% endblock %}
