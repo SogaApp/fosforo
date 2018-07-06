@@ -38,6 +38,11 @@ class Factura
     private $vrTotal = 0;
 
     /**
+     * @ORM\OneToMany(targetEntity="FacturaDetalle", mappedBy="facturaRel")
+     */
+    protected $facturasDetallesFacturaRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoFacturaPk()
@@ -117,7 +122,21 @@ class Factura
         $this->vrTotal = $vrTotal;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getFacturasDetallesFacturaRel()
+    {
+        return $this->facturasDetallesFacturaRel;
+    }
 
+    /**
+     * @param mixed $facturasDetallesFacturaRel
+     */
+    public function setFacturasDetallesFacturaRel($facturasDetallesFacturaRel): void
+    {
+        $this->facturasDetallesFacturaRel = $facturasDetallesFacturaRel;
+    }
 
 }
 
