@@ -23,7 +23,12 @@ class AppExtension extends AbstractExtension
     {
         return [
             new TwigFunction('notify', [$this, "getNotifies"]),
+            new TwigFunction('env', [$this, "getEnv"]),
         ];
+    }
+
+    public function getEnv($env) {
+        return getenv($env);
     }
 
     /**

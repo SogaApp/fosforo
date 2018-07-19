@@ -59,7 +59,7 @@
     {{ parent() }}
     <script>
         var codigoFactura = '{{ arFactura.codigoFacturaPk }}';
-        var endpoint = "http://localhost/fosforo/public/index.php/api/factura/detalle/agregar/" + codigoFactura;
+        var endpoint = "{{ env('SERVER_API') }}/api/factura/detalle/agregar/" + codigoFactura;
         $(function() {
 
             var button = $("#agregar-item");
