@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Repository;
+namespace App\Repository\RecursoHumano;
 
-use App\Entity\Factura;
+use App\Entity\RecursoHumano\Factura;
+use App\Form\Type\RecursoHumano\FacturaType;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 use Doctrine\ORM\EntityManager;
@@ -24,5 +25,22 @@ class FacturaRepository extends ServiceEntityRepository
         Mensajes::warning("Advertencia!!!");
         echo "hola mundo";
         return "respuesta";
+    }
+
+    public function lista()
+    {
+        $campos = FacturaType::getCamposLista();
+        $em = $this->getEntityManager();
+        $qb = $em->createQueryBuilder()->from("App:RecursoHumano\Factura","f")
+            ->select("f.codigoFacturaPk");
+        $columnas = array_keys($campos);
+        foreach($columnas AS $columna) {
+            $qb->addSelect("f.{$columna}");
+        }
+        $data = $qb->getQuery()->getResult();
+        return [
+            'columnas' => $campos,
+            'data' => $data,
+        ];
     }
 }

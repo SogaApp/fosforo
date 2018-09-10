@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Repository;
+namespace App\Repository\RecursoHumano;
 
-use App\Entity\Factura;
-use App\Entity\FacturaDetalle;
+use App\Entity\RecursoHumano\Factura;
+use App\Entity\RecursoHumano\FacturaDetalle;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 use Doctrine\ORM\EntityManager;

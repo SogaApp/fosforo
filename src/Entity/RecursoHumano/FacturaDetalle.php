@@ -1,7 +1,7 @@
 <?php
 
 
-namespace App\Entity;
+namespace App\Entity\RecursoHumano;
 
 use Doctrine\ORM\Mapping as ORM;
 
