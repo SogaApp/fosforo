@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller;
+namespace App\Controller\Movimiento;
 
 use FOS\RestBundle\Controller\Annotations as Rest;
 use Symfony\Component\HttpFoundation\Request;
@@ -34,12 +34,13 @@ class FacturaController extends Controller
      * @throws \Doctrine\ORM\ORMException
      * @Rest\Post("/api/factura/detalle/agregar/{codigoFactura}")
      */
-    public function agregarDetalle(Request $request, $codigoFactura=0) {
+    public function agregarDetalle(Request $request, $codigoFactura = 0)
+    {
         $arrData = json_decode($request->request->get("detalle"), true);
         # Se puede procesar la data enviada por ajax.
         return $this->getDoctrine()
-                    ->getManager()
-                    ->getRepository("App:FacturaDetalle")
-                    ->agregarDetalle($codigoFactura, $arrData);
+            ->getManager()
+            ->getRepository("App:FacturaDetalle")
+            ->agregarDetalle($codigoFactura, $arrData);
     }
 }
