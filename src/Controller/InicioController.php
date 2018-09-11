@@ -2,7 +2,7 @@
 
 namespace App\Controller;
 
-use App\Entity\Factura;
+use App\Entity\RecursoHumano\Factura;
 use App\Util\General;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;

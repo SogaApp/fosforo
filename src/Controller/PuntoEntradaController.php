@@ -32,8 +32,11 @@ class PuntoEntradaController extends BaseController
 
         $repositorio = $this->getDoctrine()->getManager()->getRepository("App:{$this->moduloActual}\\{$this->claseActual}");
         $data = $repositorio->lista();
-        var_dump($data);
-        exit();
+
+        return $this->render('/rhu/Factura/lista.html.twig', [
+            'columnas' => $data['columnas'],
+            'datos'    => $data['data'],
+        ]);
     }
 
 

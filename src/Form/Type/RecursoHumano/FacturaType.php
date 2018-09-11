@@ -3,12 +3,13 @@
 namespace App\Form\Type\RecursoHumano;
 
 use App\Entity\RecursoHumano\Factura;
-use Symfony\Component\Form\AbstractType;
+use App\Form\Type\DefinicionEntidad;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class FacturaType extends AbstractType
+class FacturaType extends DefinicionEntidad
 {
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
@@ -26,12 +27,12 @@ class FacturaType extends AbstractType
         ]);
     }
 
-    public static function getCamposLista() {
+    public static function definicionCampos() {
         return [
-            'numero' => 'Número',
-            'fecha' => 'Fecha',
-            'vrSubtotal' => 'Subtotal',
-            'vrTotal' => 'Total',
+            'numero'        => self::entero(),
+            'fecha'         => self::fecha(),
+            'vrSubtotal'    => self::entero(),
+            'vrTotal'       => self::entero(),
         ];
     }
 }

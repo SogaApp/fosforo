@@ -3,13 +3,14 @@
 namespace App\Repository\RecursoHumano;
 
 use App\Entity\RecursoHumano\Factura;
+use App\Form\Type\Campo;
 use App\Form\Type\RecursoHumano\FacturaType;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use App\Repository\AbstractRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 use Doctrine\ORM\EntityManager;
 use App\Util\Mensajes;
 
-class FacturaRepository extends ServiceEntityRepository
+class FacturaRepository extends AbstractRepository
 {
 
     public function __construct(RegistryInterface $registry)
@@ -30,17 +31,13 @@ class FacturaRepository extends ServiceEntityRepository
     public function lista()
     {
         $campos = FacturaType::getCamposLista();
-        $em = $this->getEntityManager();
-        $qb = $em->createQueryBuilder()->from("App:RecursoHumano\Factura","f")
-            ->select("f.codigoFacturaPk");
-        $columnas = array_keys($campos);
-        foreach($columnas AS $columna) {
-            $qb->addSelect("f.{$columna}");
-        }
-        $data = $qb->getQuery()->getResult();
+        $resultados = $this->procesarQueryLista(
+            "App:RecursoHumano\Factura",
+            $campos,
+            "codigoFacturaPk");
         return [
             'columnas' => $campos,
-            'data' => $data,
+            'data' => $resultados,
         ];
     }
 }
