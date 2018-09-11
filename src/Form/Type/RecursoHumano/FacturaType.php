@@ -27,7 +27,7 @@ class FacturaType extends DefinicionEntidad
         ]);
     }
 
-    public static function definicionCampos() {
+    public static function definicionCamposLista() {
         return [
             'numero'        => self::entero(),
             'fecha'         => self::fecha(),

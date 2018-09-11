@@ -55,7 +55,7 @@ abstract  class DefinicionEntidad extends AbstractType {
      * Definición de función para retornar la definición de los campos.
      * @return Campo[]
      */
-    public abstract static function definicionCampos();
+    public abstract static function definicionCamposLista();
 
     /**
      * Permite obtener los campos definidos en la entidad.
