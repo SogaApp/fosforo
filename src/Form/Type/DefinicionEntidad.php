@@ -63,7 +63,7 @@ abstract  class DefinicionEntidad extends AbstractType {
      */
     public static function getCamposLista() {
         $className = get_called_class();
-        $campos = call_user_func_array([$className, 'definicionCampos'], []);
+        $campos = call_user_func_array([$className, 'definicionCamposLista'], []);
         foreach($campos AS $key=>$campo) {
             $campo->setNombre($key);
         }
