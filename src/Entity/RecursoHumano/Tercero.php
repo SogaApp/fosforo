@@ -28,7 +28,7 @@ class Tercero
     private $nit;
 
     /**
-     * @ORM\Column(name="nombre", type="float", nullable=true)
+     * @ORM\Column(name="nombre", type="string", nullable=true)
      */
     private $nombre;
 
@@ -57,6 +57,22 @@ class Tercero
     public function setCodigoTerceroPk($codigoTerceroPk): void
     {
         $this->codigoTerceroPk = $codigoTerceroPk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoFormaPagoFk()
+    {
+        return $this->codigoFormaPagoFk;
+    }
+
+    /**
+     * @param mixed $codigoFormaPagoFk
+     */
+    public function setCodigoFormaPagoFk($codigoFormaPagoFk): void
+    {
+        $this->codigoFormaPagoFk = $codigoFormaPagoFk;
     }
 
     /**
@@ -94,17 +110,17 @@ class Tercero
     /**
      * @return mixed
      */
-    public function getCodigoFormaPagoFk()
+    public function getFormaPagoRel()
     {
-        return $this->codigoFormaPagoFk;
+        return $this->formaPagoRel;
     }
 
     /**
-     * @param mixed $codigoFormaPagoFk
+     * @param mixed $formaPagoRel
      */
-    public function setCodigoFormaPagoFk($codigoFormaPagoFk): void
+    public function setFormaPagoRel($formaPagoRel): void
     {
-        $this->codigoFormaPagoFk = $codigoFormaPagoFk;
+        $this->formaPagoRel = $formaPagoRel;
     }
 
     /**
@@ -122,23 +138,6 @@ class Tercero
     {
         $this->facturasTerceroRel = $facturasTerceroRel;
     }
-
-    /**
-     * @return mixed
-     */
-    public function getFormaPagoRel()
-    {
-        return $this->formaPagoRel;
-    }
-
-    /**
-     * @param mixed $formaPagoRel
-     */
-    public function setFormaPagoRel($formaPagoRel): void
-    {
-        $this->formaPagoRel = $formaPagoRel;
-    }
-
 
 }
 
