@@ -18,6 +18,11 @@ class Factura
     private $codigoFacturaPk;
 
     /**
+     * @ORM\Column(name="codigo_tercero_fk", type="integer", nullable=true)
+     */
+    private $codigoTerceroFk;
+
+    /**
      * @ORM\Column(name="numero", type="float", nullable=true)
      */
     private $numero;
@@ -36,6 +41,12 @@ class Factura
      * @ORM\Column(name="vr_total", type="float", nullable=true)
      */
     private $vrTotal = 0;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Tercero", inversedBy="facturasTerceroRel")
+     * @ORM\JoinColumn(name="codigo_tercero_fk", referencedColumnName="codigo_tercero_pk")
+     */
+    protected $terceroRel;
 
     /**
      * @ORM\OneToMany(targetEntity="FacturaDetalle", mappedBy="facturaRel")
@@ -137,6 +148,40 @@ class Factura
     {
         $this->facturasDetallesFacturaRel = $facturasDetallesFacturaRel;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoTerceroFk()
+    {
+        return $this->codigoTerceroFk;
+    }
+
+    /**
+     * @param mixed $codigoTerceroFk
+     */
+    public function setCodigoTerceroFk($codigoTerceroFk): void
+    {
+        $this->codigoTerceroFk = $codigoTerceroFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTerceroRel()
+    {
+        return $this->terceroRel;
+    }
+
+    /**
+     * @param mixed $terceroRel
+     */
+    public function setTerceroRel($terceroRel): void
+    {
+        $this->terceroRel = $terceroRel;
+    }
+
+
 
 }
 
