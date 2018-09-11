@@ -16,7 +16,7 @@ class Campo {
     const TIPO_STRING   = 'string';
     const TIPO_NUMERO   = 'number';
     const TIPO_DATE     = 'date';
-    const TIPO_DATETIME     = 'date';
+    const TIPO_DATETIME     = 'datetime';
     private $tipo;
     private $nombre;
     private $maximoCaracteres;
@@ -81,6 +81,7 @@ class Campo {
      */
     public function setNombre($nombre) {
         $this->nombre = $nombre;
+        return $this;
     }
 
     /**
@@ -101,6 +102,11 @@ class Campo {
             case self::TIPO_DATETIME: return $this->valor? $this->valor->format($this->formatDateTime) : null;
             default : return $this->valor;
         }
+    }
+
+    public function formato($formato) {
+        $this->formatDate = $formato;
+        return $this;
     }
 
     /**

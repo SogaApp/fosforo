@@ -30,7 +30,7 @@ class FacturaType extends DefinicionEntidad
     public static function definicionCamposLista() {
         return [
             'numero'        => self::entero(),
-            'fecha'         => self::fecha(),
+            'fecha'         => self::fecha()->formato("Y/m/d"),
             'vrSubtotal'    => self::entero(),
             'vrTotal'       => self::entero(),
         ];
