@@ -20,22 +20,23 @@ class PuntoEntradaController extends BaseController
      */
     public function lista(Request $request, $modulo, $clase)
     {
-        if(!$this->validarModulo($modulo)) {
+        if (!$this->validarModulo($modulo)) {
             echo "Módulo no existe!";
             exit();
         }
 
-        if(!$this->validarRepositorio($clase)) {
+        if (!$this->validarRepositorio($clase)) {
             echo "No existe el repositorio!";
             exit();
         }
 
         $repositorio = $this->getDoctrine()->getManager()->getRepository("App:{$this->moduloActual}\\{$this->claseActual}");
         $data = $repositorio->lista();
+        $paginator = $this->get('knp_paginator');
 
         return $this->render('/rhu/Factura/lista.html.twig', [
             'columnas' => $data['columnas'],
-            'datos'    => $data['data'],
+            'datos' => $paginator->paginate($data['data'], $request->query->getInt('page', 1), 30),
         ]);
     }
 
