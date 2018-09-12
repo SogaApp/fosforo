@@ -31,10 +31,12 @@ class FacturaRepository extends AbstractRepository
     public function lista()
     {
         $campos = FacturaType::getCamposLista();
-        $resultados = $this->procesarQueryLista(
+        $this->procesarQueryLista(
             "App:RecursoHumano\Factura",
             $campos,
             "codigoFacturaPk");
+        $data = $this->queryLista->getQuery()->getResult();
+        $resultados = $this->procesarResultadosLista($campos, $data);
         return [
             'columnas' => $campos,
             'data' => $resultados,

@@ -16,16 +16,33 @@ class Campo {
     const TIPO_STRING   = 'string';
     const TIPO_NUMERO   = 'number';
     const TIPO_DATE     = 'date';
-    const TIPO_DATETIME     = 'datetime';
+    const TIPO_DATETIME = 'datetime';
     private $tipo;
     private $nombre;
     private $maximoCaracteres;
     private $valor = null;
     private $formatDate = 'Y-m-d';
     private $formatDateTime = 'Y-m-d H:i:ss';
+    private $esRelacion = false;
+    private $relacion = null;
 
     public function __construct($nombre = "") {
         $this->nombre = $nombre;
+    }
+
+
+    /**
+     * @param $relacion
+     * @return Campo
+     */
+    public function rel($relacion) {
+        $this->esRelacion = true;
+        $this->relacion = $relacion;
+        return $this;
+    }
+
+    public function esRel() {
+        return $this->esRelacion;
     }
 
     public function __toString() {

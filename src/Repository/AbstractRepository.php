@@ -2,7 +2,9 @@
 
 namespace App\Repository;
 
+use App\Form\Type\Campo;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\QueryBuilder;
 
 /**
  * Esta clase contiene las funciones base de un repositorio para generar listados, vistas y manejo
@@ -12,36 +14,40 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
  */
 abstract class AbstractRepository extends ServiceEntityRepository{
 
+    protected $maxRecordsPerPage = 100;
+    /**
+     * @var QueryBuilder
+     */
+    protected $queryLista = null;
     /**
      * Esta función retorna la query utilizada para listar los registros.
      * @param $repositorio
      * @param $alias
      * @param $pk
-     * @return \Doctrine\ORM\QueryBuilder
      */
     protected function queryLista($repositorio, $alias, $pk) {
         $em = $this->getEntityManager();
-        $qb = $em->createQueryBuilder()->from($repositorio,$alias)
+        $this->queryLista = $em->createQueryBuilder()->from($repositorio,$alias)
             ->select("{$alias}.{$pk}");
-        return $qb;
+        $this->queryLista->setMaxResults($this->maxRecordsPerPage);
     }
 
     /**
      * Esta función construye la query del listado
      * @param $repositorio
-     * @param array $campos
+     * @param Campo[] $campos
      * @param string $pk
      * @param string $alias
      * @return array
      */
     protected function procesarQueryLista($repositorio, $campos=[], $pk = "", $alias = "t") {
-        $qb = $this->queryLista($repositorio, $alias, $pk);
+        $this->queryLista($repositorio, $alias, $pk);
         # Construimos los select de la consulta.
         foreach($campos AS $campo) {
-            $qb->addSelect("{$alias}.{$campo}");
+            if(!$campo->esRel()) {
+                $this->queryLista->addSelect("{$alias}.{$campo}");
+            }
         }
-        $data = $qb->getQuery()->getResult();
-        return $this->procesarResultadosLista($campos, $data);
     }
 
     /**

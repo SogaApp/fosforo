@@ -33,6 +33,7 @@ class FacturaType extends DefinicionEntidad
             'fecha'         => self::fecha()->formato("Y/m/d"),
             'vrSubtotal'    => self::entero(),
             'vrTotal'       => self::entero(),
+            'formaPago'     => self::string()->rel("tercero.formaPago.nombre"),
         ];
     }
 }
