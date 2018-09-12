@@ -16,8 +16,7 @@ class FacturaType extends DefinicionEntidad
             ->add('numero')
             ->add('fecha')
             ->add('vrSubtotal')
-            ->add('vrTotal')
-        ;
+            ->add('vrTotal');
     }
 
     public function configureOptions(OptionsResolver $resolver)
@@ -27,16 +26,19 @@ class FacturaType extends DefinicionEntidad
         ]);
     }
 
-    public static function definicionCamposLista() {
+    public static function definicionCamposLista()
+    {
         # Labels y tooltips
         # Crear función en twig
         return [
-            'numero'        => self::entero("Número"),
-            'fecha'         => self::fecha("Fecha")->formato("Y/m/d"),
-            'vrSubtotal'    => self::entero("Sub total"),
-            'vrTotal'       => self::entero("Total"),
-            'tercero'     => self::string("Tercero")->rel("tercero.nombre"),
-            'formaPago'     => self::string("Forma de pago")->rel("tercero.formaPago.nombre"),
+            'numero' => self::entero("Número"),
+            'facturaTipo' => self::string("Tipo factura")->rel("facturaTipo.nombre"),
+            'nitTercero' => self::entero("Nit")->rel("tercero.nit"),
+            'tercero' => self::string("Tercero")->rel("tercero.nombre"),
+            'formaPago' => self::string("Forma de pago")->rel("tercero.formaPago.nombre"),
+            'fecha' => self::fecha("Fecha")->formato("Y/m/d"),
+            'vrSubtotal' => self::entero("Sub total"),
+            'vrTotal' => self::entero("Total"),
         ];
     }
 }

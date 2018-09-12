@@ -23,6 +23,11 @@ class Factura
     private $codigoTerceroFk;
 
     /**
+     * @ORM\Column(name="codigo_factura_tipo_fk", type="integer", nullable=true)
+     */
+    private $codigoFacturaTipoFk;
+
+    /**
      * @ORM\Column(name="numero", type="float", nullable=true)
      */
     private $numero;
@@ -47,6 +52,12 @@ class Factura
      * @ORM\JoinColumn(name="codigo_tercero_fk", referencedColumnName="codigo_tercero_pk")
      */
     protected $terceroRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\RecursoHumano\FacturaTipo", inversedBy="facturasFacturaTipoRel")
+     * @ORM\JoinColumn(name="codigo_factura_tipo_fk", referencedColumnName="codigo_factura_tipo_pk")
+     */
+    protected $facturaTipoRel;
 
     /**
      * @ORM\OneToMany(targetEntity="FacturaDetalle", mappedBy="facturaRel")
@@ -181,7 +192,37 @@ class Factura
         $this->terceroRel = $terceroRel;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getCodigoFacturaTipoFk()
+    {
+        return $this->codigoFacturaTipoFk;
+    }
 
+    /**
+     * @param mixed $codigoFacturaTipoFk
+     */
+    public function setCodigoFacturaTipoFk($codigoFacturaTipoFk): void
+    {
+        $this->codigoFacturaTipoFk = $codigoFacturaTipoFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFacturaTipoRel()
+    {
+        return $this->facturaTipoRel;
+    }
+
+    /**
+     * @param mixed $facturaTipoRel
+     */
+    public function setFacturaTipoRel($facturaTipoRel): void
+    {
+        $this->facturaTipoRel = $facturaTipoRel;
+    }
 
 }
 
