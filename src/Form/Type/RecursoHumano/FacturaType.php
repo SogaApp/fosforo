@@ -28,12 +28,15 @@ class FacturaType extends DefinicionEntidad
     }
 
     public static function definicionCamposLista() {
+        # Labels y tooltips
+        # Crear función en twig
         return [
-            'numero'        => self::entero(),
-            'fecha'         => self::fecha()->formato("Y/m/d"),
-            'vrSubtotal'    => self::entero(),
-            'vrTotal'       => self::entero(),
-            'formaPago'     => self::string()->rel("tercero.formaPago.nombre"),
+            'numero'        => self::entero("Número"),
+            'fecha'         => self::fecha("Fecha")->formato("Y/m/d"),
+            'vrSubtotal'    => self::entero("Sub total"),
+            'vrTotal'       => self::entero("Total"),
+            'tercero'     => self::string("Tercero")->rel("tercero.nombre"),
+            'formaPago'     => self::string("Forma de pago")->rel("tercero.formaPago.nombre"),
         ];
     }
 }

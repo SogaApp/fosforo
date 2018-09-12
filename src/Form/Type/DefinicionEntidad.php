@@ -21,34 +21,42 @@ abstract  class DefinicionEntidad extends AbstractType {
 
     /**
      * Crear un campo tipo entero.
+     * @param string $label
+     * @param string $tooltip
      * @return Campo
      */
-    public static function entero() {
-        return Campo::nuevoCampo()->setTipo(Campo::TIPO_NUMERO);
+    public static function entero($label, $tooltip = null) {
+        return Campo::nuevoCampo($label, $tooltip)->setTipo(Campo::TIPO_NUMERO);
     }
 
     /**
      * Crear un campo tipo string.
+     * @param string $label
+     * @param string $tooltip
      * @return Campo
      */
-    public static function string() {
-        return Campo::nuevoCampo()->setTipo(Campo::TIPO_STRING);
+    public static function string($label, $tooltip = null) {
+        return Campo::nuevoCampo($label, $tooltip)->setTipo(Campo::TIPO_STRING);
     }
 
     /**
      * Crear un campo tipo fecha.
+     * @param string $label
+     * @param string $tooltip
      * @return Campo
      */
-    public static function fecha() {
-        return Campo::nuevoCampo()->setTipo(Campo::TIPO_DATE);
+    public static function fecha($label, $tooltip = null) {
+        return Campo::nuevoCampo($label, $tooltip)->setTipo(Campo::TIPO_DATE);
     }
 
     /**
      * Crear un campo tipo dateTime.
+     * @param string $label
+     * @param string $tooltip
      * @return Campo
      */
-    public static function fechaTiempo() {
-        return Campo::nuevoCampo()->setTipo(Campo::TIPO_DATETIME);
+    public static function fechaTiempo($label, $tooltip = null) {
+        return Campo::nuevoCampo($label, $tooltip)->setTipo(Campo::TIPO_DATETIME);
     }
 
     /**

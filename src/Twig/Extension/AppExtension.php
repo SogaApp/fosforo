@@ -4,7 +4,6 @@ namespace App\Twig\Extension;
 
 use Symfony\Component\HttpFoundation\Session\Session;
 use Twig\Extension\AbstractExtension;
-use Twig\TwigFilter;
 use Twig\TwigFunction;
 
 /**

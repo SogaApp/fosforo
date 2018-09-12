@@ -35,11 +35,18 @@ class FacturaRepository extends AbstractRepository
             "App:RecursoHumano\Factura",
             $campos,
             "codigoFacturaPk");
-        $data = $this->queryLista->getQuery()->getResult();
-        $resultados = $this->procesarResultadosLista($campos, $data);
+//        $this->queryLista->setMaxResults(10000);
+//        $data = $this->queryLista->getQuery()->getResult();
+//        $resultados = $this->procesarResultadosLista($campos, $data);
+//        var_dump($resultados);
+//        exit();
+//        $resultados = $data;
+        # con el fin de hacer pruebas voy a retornar el resultado crudo, para ver si le puedo delegar toda la responsabilidad de
+        # obtener los valores directamente desde twig.
         return [
             'columnas' => $campos,
-            'data' => $resultados,
+//            'data' => $resultados,
+            'query' => $this->queryLista,
         ];
     }
 }

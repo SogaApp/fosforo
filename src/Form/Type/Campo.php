@@ -25,11 +25,14 @@ class Campo {
     private $formatDateTime = 'Y-m-d H:i:ss';
     private $esRelacion = false;
     private $relacion = null;
+    # Vamos a hacer lo de los labels y los tooltips
+    private $tooltip = null;
+    private $label = null;
 
-    public function __construct($nombre = "") {
-        $this->nombre = $nombre;
+    public function __construct($label = "", $tooltip = "") {
+        $this->label = $label;
+        $this->tooltip = !empty($tooltip)? $tooltip : $label; # Si no se definió tooltip asignamos el mismo label como tooltip.
     }
-
 
     /**
      * @param $relacion
@@ -131,7 +134,19 @@ class Campo {
      * @param string $nombre
      * @return Campo
      */
-    public static function nuevoCampo($nombre = "") {
-        return new Campo($nombre);
+    public static function nuevoCampo($label = "", $tooltip = null) {
+        return new Campo($label, $tooltip);
+    }
+
+    public function getLabel() {
+        return $this->label;
+    }
+
+    public function getTooltip() {
+        return $this->tooltip;
+    }
+
+    public function getRel() {
+        return $this->relacion;
     }
 }

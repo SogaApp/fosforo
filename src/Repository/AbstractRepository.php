@@ -14,7 +14,7 @@ use Doctrine\ORM\QueryBuilder;
  */
 abstract class AbstractRepository extends ServiceEntityRepository{
 
-    protected $maxRecordsPerPage = 100;
+    protected $maxRecordsPerPage = 10000;
     /**
      * @var QueryBuilder
      */
@@ -29,7 +29,7 @@ abstract class AbstractRepository extends ServiceEntityRepository{
         $em = $this->getEntityManager();
         $this->queryLista = $em->createQueryBuilder()->from($repositorio,$alias)
             ->select("{$alias}.{$pk}");
-        $this->queryLista->setMaxResults($this->maxRecordsPerPage);
+//        $this->queryLista->setMaxResults($this->maxRecordsPerPage);
     }
 
     /**
@@ -43,10 +43,36 @@ abstract class AbstractRepository extends ServiceEntityRepository{
     protected function procesarQueryLista($repositorio, $campos=[], $pk = "", $alias = "t") {
         $this->queryLista($repositorio, $alias, $pk);
         # Construimos los select de la consulta.
+        # Por ahora no lo haremos con cada uno de los campos.
+        $this->queryLista->select("{$alias}");
+        $relsCount = 0;
+
         foreach($campos AS $campo) {
-            if(!$campo->esRel()) {
-                $this->queryLista->addSelect("{$alias}.{$campo}");
+            if($campo->esRel()) {
+                $this->resolverRelaciones($campo->getRel(), $this->queryLista, $alias, $relsCount);
+                $relsCount ++;
             }
+        }
+    }
+
+    /**
+     * @param $relacion
+     * @param $query QueryBuilder
+     */
+    private function resolverRelaciones($relacion, &$query, $alias, $conteo = 0) {
+        $partes = explode('.', $relacion);
+        $ultimoIndice = count($partes) - 1;
+        unset($partes[$ultimoIndice]); # el atributo no lo necesitamos.
+        $aliasRelacion = "{$partes[0]}_{$conteo}";
+        $relacionAProcesar = $partes[0];
+        $query->leftJoin("{$alias}.{$relacionAProcesar}Rel", $aliasRelacion);
+        $query->addSelect($aliasRelacion);
+        unset($partes[0]);
+        foreach($partes AS $rel) {
+            $nuevoAliasRelacion = "{$rel}_{$conteo}";
+            $query->leftJoin("{$aliasRelacion}.{$rel}Rel", $nuevoAliasRelacion);
+            $query->addSelect($nuevoAliasRelacion);
+            $aliasRelacion = $nuevoAliasRelacion;
         }
     }
 

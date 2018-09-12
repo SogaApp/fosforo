@@ -36,7 +36,8 @@ class PuntoEntradaController extends BaseController
 
         return $this->render('/rhu/Factura/lista.html.twig', [
             'columnas' => $data['columnas'],
-            'datos' => $paginator->paginate($data['data'], $request->query->getInt('page', 1), 30),
+            'datos' => $paginator->paginate($data['query'], $request->query->getInt('page', 1), 30),
+//            'datos' => $data['data'],
         ]);
     }
 
