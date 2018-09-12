@@ -36,6 +36,7 @@ class FacturaType extends DefinicionEntidad
             'nitTercero' => self::entero("Nit")->rel("tercero.nit"),
             'tercero' => self::string("Tercero")->rel("tercero.nombre"),
             'formaPago' => self::string("Forma de pago")->rel("tercero.formaPago.nombre"),
+            'pais' => self::string("Pais")->rel("tercero.ciudad.departamento.pais.nombre"),
             'fecha' => self::fecha("Fecha")->formato("Y/m/d"),
             'vrSubtotal' => self::entero("Sub total"),
             'vrTotal' => self::entero("Total"),

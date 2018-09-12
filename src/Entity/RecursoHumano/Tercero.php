@@ -23,6 +23,11 @@ class Tercero
     private $codigoFormaPagoFk;
 
     /**
+     * @ORM\Column(name="codigo_ciudad_fk", type="integer", nullable=true)
+     */
+    private $codigoCiudadFk;
+
+    /**
      * @ORM\Column(name="nit", type="integer", nullable=true)
      */
     private $nit;
@@ -31,6 +36,12 @@ class Tercero
      * @ORM\Column(name="nombre", type="string", nullable=true)
      */
     private $nombre;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\General\Ciudad", inversedBy="tercerosCiudadRel")
+     * @ORM\JoinColumn(name="codigo_ciudad_fk", referencedColumnName="codigo_ciudad_pk")
+     */
+    protected $ciudadRel;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\RecursoHumano\FormaPago", inversedBy="tercerosFormaPagoRel")
