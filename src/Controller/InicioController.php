@@ -8,7 +8,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use \SoapClient;
-
+use FOS\RestBundle\Controller\Annotations as Rest;
 
 class InicioController extends Controller
 {
@@ -32,5 +32,7 @@ class InicioController extends Controller
             'number' => "saludo",
         ));
     }
+
+
 
 }
