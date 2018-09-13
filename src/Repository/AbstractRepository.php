@@ -12,22 +12,26 @@ use Doctrine\ORM\QueryBuilder;
  * Class AbstractRepository
  * @package App\Repository
  */
-abstract class AbstractRepository extends ServiceEntityRepository{
+abstract class AbstractRepository extends ServiceEntityRepository
+{
 
     protected $maxRecordsPerPage = 10000;
+    protected $arrRelacionesRegistradas = [];
     /**
      * @var QueryBuilder
      */
     protected $queryLista = null;
+
     /**
      * Esta función retorna la query utilizada para listar los registros.
      * @param $repositorio
      * @param $alias
      * @param $pk
      */
-    protected function queryLista($repositorio, $alias, $pk) {
+    protected function queryLista($repositorio, $alias, $pk)
+    {
         $em = $this->getEntityManager();
-        $this->queryLista = $em->createQueryBuilder()->from($repositorio,$alias)
+        $this->queryLista = $em->createQueryBuilder()->from($repositorio, $alias)
             ->select("{$alias}.{$pk}");
 //        $this->queryLista->setMaxResults($this->maxRecordsPerPage);
     }
@@ -40,39 +44,56 @@ abstract class AbstractRepository extends ServiceEntityRepository{
      * @param string $alias
      * @return array
      */
-    protected function procesarQueryLista($repositorio, $campos=[], $pk = "", $alias = "t") {
+    protected function procesarQueryLista($repositorio, $campos = [], $pk = "", $alias = "t")
+    {
         $this->queryLista($repositorio, $alias, $pk);
         # Construimos los select de la consulta.
         # Por ahora no lo haremos con cada uno de los campos.
         $this->queryLista->select("{$alias}");
         $relsCount = 0;
 
-        foreach($campos AS $campo) {
-            if($campo->esRel()) {
+        foreach ($campos AS $campo) {
+            if ($campo->esRel()) {
                 $this->resolverRelaciones($campo->getRel(), $this->queryLista, $alias, $relsCount);
-                $relsCount ++;
+                $relsCount++;
             }
         }
+
+        $this->queryLista->getQuery()->getDQL();
+
     }
 
     /**
      * @param $relacion
      * @param $query QueryBuilder
      */
-    private function resolverRelaciones($relacion, &$query, $alias, $conteo = 0) {
+    private function resolverRelaciones($relacion, &$query, $alias, $conteo = 0)
+    {
         $partes = explode('.', $relacion);
         $ultimoIndice = count($partes) - 1;
         unset($partes[$ultimoIndice]); # el atributo no lo necesitamos.
-        $aliasRelacion = "{$partes[0]}_{$conteo}";
-        $relacionAProcesar = $partes[0];
-        $query->leftJoin("{$alias}.{$relacionAProcesar}Rel", $aliasRelacion);
-        $query->addSelect($aliasRelacion);
+        $primerAlias = $partes[0];
         unset($partes[0]);
-        foreach($partes AS $rel) {
-            $nuevoAliasRelacion = "{$rel}_{$conteo}";
-            $query->leftJoin("{$aliasRelacion}.{$rel}Rel", $nuevoAliasRelacion);
-            $query->addSelect($nuevoAliasRelacion);
-            $aliasRelacion = $nuevoAliasRelacion;
+
+        if (!key_exists($primerAlias, $this->arrRelacionesRegistradas)) { # No existe la relación.
+            $aliasRelacion = "{$primerAlias}_{$conteo}";
+            $query->leftJoin("{$alias}.{$primerAlias}Rel", $aliasRelacion);
+            $query->addSelect($aliasRelacion);
+            $this->arrRelacionesRegistradas[$primerAlias] = $aliasRelacion; # Registramos el alias.
+        } else if (key_exists($primerAlias, $this->arrRelacionesRegistradas)) {
+            $aliasRelacion = $this->arrRelacionesRegistradas[$primerAlias];
+        }
+
+        foreach ($partes AS $rel) {
+            if (!key_exists($rel, $this->arrRelacionesRegistradas)) {
+                $nuevoAliasRelacion = "{$rel}_{$conteo}";
+                $query->leftJoin("{$aliasRelacion}.{$rel}Rel", $nuevoAliasRelacion);
+                $query->addSelect($nuevoAliasRelacion);
+                $this->arrRelacionesRegistradas[$rel] = $nuevoAliasRelacion; # Registramos el alias.
+                $aliasRelacion = $nuevoAliasRelacion;
+            } else {
+                $aliasRelacion = $this->arrRelacionesRegistradas[$rel];
+            }
         }
     }
 
@@ -83,9 +104,10 @@ abstract class AbstractRepository extends ServiceEntityRepository{
      * @param $data
      * @return array
      */
-    protected function procesarResultadosLista($campos, $data) {
+    protected function procesarResultadosLista($campos, $data)
+    {
         $resultados = [];
-        foreach($data AS $registro) {
+        foreach ($data AS $registro) {
             $resultados[] = $this->resolverValoresCampos($campos, $registro);
         }
         return $resultados;
@@ -97,10 +119,11 @@ abstract class AbstractRepository extends ServiceEntityRepository{
      * @param $data
      * @return []
      */
-    protected function resolverValoresCampos($campos, $data) {
+    protected function resolverValoresCampos($campos, $data)
+    {
         $valores = [];
-        foreach($campos AS $campo) {
-            $campo->setValor($data[$campo->getNombre()]?? null);
+        foreach ($campos AS $campo) {
+            $campo->setValor($data[$campo->getNombre()] ?? null);
             $valores[$campo->getNombre()] = $campo->resolverValor();
         }
         return $valores;
