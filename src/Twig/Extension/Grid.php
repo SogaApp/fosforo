@@ -21,7 +21,8 @@ use Twig\TwigFunction;
  * Class Grid
  * @package App\Twig\Extension
  */
-class Grid extends AbstractExtension{
+class Grid extends AbstractExtension
+{
 
     public function getFunctions()
     {
@@ -32,19 +33,21 @@ class Grid extends AbstractExtension{
 
     /**
      * @param Campo[] $campos
-     * @param $data[]
+     * @param $data []
      */
-    public function dibujarGrid($campos=[], $data=[]) {
+    public function dibujarGrid($campos = [], $data = [])
+    {
         $cabecera = $this->dibujarEncabezado($campos); # Se llama el método para construir encabezados.
         $cuerpo = $this->dibujarCuerpo($campos, $data);
         $salidaHtml = "{$cabecera}{$cuerpo}";
         return $this->tag("table", $salidaHtml, ['border' => 1]);
     }
 
-    public function dibujarCuerpo($campos, $data) {
+    public function dibujarCuerpo($campos, $data)
+    {
         # Intenté ver si podía escanear la información de la entidad desde aqui. no pude XD
         $filas = [];
-        foreach($data AS $fila) {
+        foreach ($data AS $fila) {
             $columnas = $this->dibujarColumnas($campos, $fila);
             $filas [] = $this->tag("tr", $columnas);
         }
@@ -56,22 +59,25 @@ class Grid extends AbstractExtension{
      * @param $entidad
      * @return string
      */
-    private function dibujarColumnas($campos, $entidad) {
+    private function dibujarColumnas($campos, $entidad)
+    {
         $columnas = [];
-        foreach($campos AS $campo) {
-            if(!$campo->esRel()) {
+        foreach ($campos AS $campo) {
+            $align = $campo->getAlineamiento(); // "center, right, left
+            if (!$campo->esRel()) {
                 $valor = $this->llamarMetodoGet($campo->getNombre(), $entidad);
                 $campo->setValor($valor);
-                $columnas[] = $this->tag("td", $campo->resolverValor());
+                $columnas[] = $this->tag("td", $campo->resolverValor(), ['align' => $align]);
             } else {
                 $valor = $this->resolverRelacion($campo->getRel(), $entidad);
-                $columnas[] = $this->tag("td", $valor);
+                $columnas[] = $this->tag("td", $valor, ['align' => $align]);
             }
         }
         return implode('', $columnas);
     }
 
-    private function resolverRelacion($relacion, $entidad) {
+    private function resolverRelacion($relacion, $entidad)
+    {
         # Paso 1: Determinar cual es la relación y cual es el campo que se quiere, para ello exploto el string de configuración.
         # "tercero.formaPago.nombre"
         $partes = explode('.', $relacion);
@@ -82,20 +88,21 @@ class Grid extends AbstractExtension{
         $valor = null;
         # empezamos a resolver relaciones recursivamente.
         $arRelacion = $entidad;
-        foreach($partes as $nombre) {
+        foreach ($partes as $nombre) {
             $nombreRel = "{$nombre}Rel";
             $arRelacion = $this->llamarMetodoGet($nombreRel, $arRelacion);
-            if($arRelacion === null) continue;
+            if ($arRelacion === null) continue;
         }
-        if($arRelacion !== null) {
+        if ($arRelacion !== null) {
             $valor = $this->llamarMetodoGet($atributo, $arRelacion);
         }
         return $valor;
     }
 
-    private function llamarMetodoGet($campo, $entidad) {
+    private function llamarMetodoGet($campo, $entidad)
+    {
         $nombreMetodo = "get" . ucfirst($campo);
-        if(method_exists($entidad, $nombreMetodo)) return call_user_func_array([$entidad, $nombreMetodo], []);
+        if (method_exists($entidad, $nombreMetodo)) return call_user_func_array([$entidad, $nombreMetodo], []);
         return "";
     }
 
@@ -103,7 +110,8 @@ class Grid extends AbstractExtension{
      * Esta función se encargará solo de dibujar los encabezados de la tabla.
      * @param Campo[] $campos
      */
-    private function dibujarEncabezado($campos) {
+    private function dibujarEncabezado($campos)
+    {
         # Introduzco el html de cada una de las celdas de la cabecera dentro de un array y luego lo implociono para formar
         # un string con el html de la celda, es una tecnica de concatenación recomendada por ser más optima.
         $celdas = [];
@@ -123,8 +131,11 @@ class Grid extends AbstractExtension{
      * @param array $attrs
      * @return string
      */
-    private function tag($tag, $content = '', $attrs = []) {
-        $attrs = implode(" ", array_map(function($attr, $value){ return "{$attr}=\"{$value}\""; }, array_keys($attrs), $attrs));
-        return "<{$tag}" . ($attrs? " {$attrs}" : "") . ">{$content}</{$tag}>";
+    private function tag($tag, $content = '', $attrs = [])
+    {
+        $attrs = implode(" ", array_map(function ($attr, $value) {
+            return "{$attr}=\"{$value}\"";
+        }, array_keys($attrs), $attrs));
+        return "<{$tag}" . ($attrs ? " {$attrs}" : "") . ">{$content}</{$tag}>";
     }
 }
