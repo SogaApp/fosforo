@@ -111,6 +111,12 @@ class Grid extends \Twig_Extension {
         return implode('', $columnas);
     }
 
+    /**
+     * Esta función resuelve las relaciones de un campo.
+     * @param $relacion
+     * @param $entidad
+     * @return mixed|null|string
+     */
     private function resolverRelacion($relacion, $entidad) {
         # Paso 1: Determinar cual es la relación y cual es el campo que se quiere, para ello exploto el string de configuración.
         # "tercero.formaPago.nombre"
