@@ -102,10 +102,10 @@ class Grid extends \Twig_Extension {
             if(!$campo->esRel()) {
                 $valor = $this->llamarMetodoGet($campo->getNombre(), $entidad);
                 $campo->setValor($valor);
-                $columnas[] = $this->tag("td", $campo->resolverValor());
+                $columnas[] = $this->tag("td", $campo->resolverValor(), ['align' => $campo->getAlineamiento()]);
             } else {
                 $valor = $this->resolverRelacion($campo->getRel(), $entidad);
-                $columnas[] = $this->tag("td", $valor);
+                $columnas[] = $this->tag("td", $valor, ['align' => $campo->getAlineamiento()]);
             }
         }
         return implode('', $columnas);
