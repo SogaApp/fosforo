@@ -39,9 +39,9 @@ class CargaInicial extends Fixture
             $manager->persist($arFacturaTipo);
         }
 
-        for ($i = 1; $i <= 7000; $i++) {
+        for ($i = 1; $i <= 200000; $i++) {
             $arFactura = $manager->getRepository("App:RecursoHumano\Factura")->find($i);
-            if (!$arFactura) {
+//            if (!$arFactura) {
                 $arFactura = new Factura();
                 $arFactura->setTerceroRel($arTercero);
                 $arFactura->setFacturaTipoRel($arFacturaTipo);
@@ -50,7 +50,7 @@ class CargaInicial extends Fixture
                 $arFactura->setVrSubtotal(10000 + $i);
                 $arFactura->setVrTotal(10000 + $i);
                 $manager->persist($arFactura);
-            }
+//            }
 
         }
         $manager->flush();
