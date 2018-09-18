@@ -60,6 +60,16 @@ abstract  class DefinicionEntidad extends AbstractType {
     }
 
     /**
+     * Crear un campo tipo dateTime.
+     * @param string $label
+     * @param string $tooltip
+     * @return Campo
+     */
+    public static function moneda($label, $tooltip = null) {
+        return Campo::nuevoCampo($label, $tooltip)->setTipo(Campo::TIPO_MONEDA);
+    }
+
+    /**
      * Definición de función para retornar la definición de los campos.
      * @return Campo[]
      */
