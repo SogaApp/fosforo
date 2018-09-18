@@ -20,12 +20,12 @@
         {#{% endfor %}#}
         {#</tbody>#}
     {#</table>#}
-    {{ grilla(columnas, datos)|raw }}
-    <div class="btn-group" style="float: left;margin-left: 0px;padding-top: 25px;">
-        <div class="btn btn-default btn-sm">Registros <span
-                    class="badge">{{ datos.getTotalItemCount }}</span></div>
-    </div>
-    <div class="btn-group btn-sm" style="float: left">
-        {{ knp_pagination_render(datos) }}
-    </div>
+    {{ grilla(columnas, datos) }}
+    {#<div class="btn-group" style="float: left;margin-left: 0px;padding-top: 25px;">#}
+        {#<div class="btn btn-default btn-sm">Registros <span#}
+                    {#class="badge">{{ datos.getTotalItemCount }}</span></div>#}
+    {#</div>#}
+    {#<div class="btn-group btn-sm" style="float: left">#}
+        {#{{ knp_pagination_render(datos) }}#}
+    {#</div>#}
 {% endblock %}

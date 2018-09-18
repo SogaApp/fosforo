@@ -9,9 +9,7 @@
 namespace App\Twig\Extension;
 
 use App\Form\Type\Campo;
-use Doctrine\ORM\EntityManager;
-use Twig\Extension\AbstractExtension;
-use Twig\TwigFunction;
+use Knp\Bundle\PaginatorBundle\Pagination\SlidingPagination;
 
 /**
  * Esta clase es la que hace la magia de dibujar la grid,
@@ -21,24 +19,66 @@ use Twig\TwigFunction;
  * Class Grid
  * @package App\Twig\Extension
  */
-class Grid extends AbstractExtension{
+class Grid extends \Twig_Extension {
 
     public function getFunctions()
     {
         return [
-            new TwigFunction('grilla', [$this, "dibujarGrid"]),
+            new \Twig_SimpleFunction('grilla', [$this, "dibujarGrid"], ['is_safe' => ['html'], 'needs_environment' => true]),
         ];
+    }
+
+    /**
+     * Esta función se encarga de emular el renderizado del procesor utilizado por KNP paginator.
+     * @param SlidingPagination $pagination
+     * @param array $queryParams
+     * @param array $viewParams
+     * @return array
+     */
+    public function renderProcessor(SlidingPagination $pagination, array $queryParams = array(), array $viewParams = array())
+    {
+        $data = $pagination->getPaginationData();
+        $data['route'] = $pagination->getRoute();
+        $data['query'] = array_merge($pagination->getParams(), $queryParams);
+        return array_merge(
+            $pagination->getPaginatorOptions(),
+            $pagination->getCustomParameters(),
+            $viewParams,
+            $data
+        );
+    }
+
+    /**
+     * Esta función se encarga de dibujar la paginación de la tabla.
+     * @param \Twig_Environment $env
+     * @param SlidingPagination $pagination
+     * @return string
+     * @throws \Twig_Error_Loader
+     * @throws \Twig_Error_Runtime
+     * @throws \Twig_Error_Syntax
+     */
+    private function renderPagination(\Twig_Environment $env, SlidingPagination $pagination) {
+        $span = $this->tag("span",$pagination->getTotalItemCount(), ['class' => 'badge']);
+        $div1 = $this->tag("div", "Registros " . $span, ['class' => "btn btn-default btn-sm"]);
+        $contador = $this->tag("div", $div1, ['class' => 'btn-group', 'style' => 'float: left;margin-left: 0px;padding-top: 25px;']);
+        $paginacion = $env->render(
+            $pagination->getTemplate(),
+            $this->renderProcessor($pagination)
+        );
+        $htmlPaginacion = $this->tag('div', $paginacion, ['class' => 'btn-group btn-sm', 'style' => 'float: left']);
+        return $this->tag("div", $contador . $htmlPaginacion);
     }
 
     /**
      * @param Campo[] $campos
      * @param $data[]
      */
-    public function dibujarGrid($campos=[], $data=[]) {
+    public function dibujarGrid(\Twig_Environment $env, $campos=[], $data=[]) {
         $cabecera = $this->dibujarEncabezado($campos); # Se llama el método para construir encabezados.
         $cuerpo = $this->dibujarCuerpo($campos, $data);
+        $paginacion = $this->renderPagination($env, $data);
         $salidaHtml = "{$cabecera}{$cuerpo}";
-        return $this->tag("table", $salidaHtml, ['border' => 1]);
+        return $this->tag("table", $salidaHtml, ['border' => 1]) . $paginacion;
     }
 
     public function dibujarCuerpo($campos, $data) {
