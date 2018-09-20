@@ -33,7 +33,6 @@ abstract class AbstractRepository extends ServiceEntityRepository
         $em = $this->getEntityManager();
         $this->queryLista = $em->createQueryBuilder()->from($repositorio, $alias)
             ->select("{$alias}.{$pk}");
-//        $this->queryLista->setMaxResults($this->maxRecordsPerPage);
     }
 
     /**

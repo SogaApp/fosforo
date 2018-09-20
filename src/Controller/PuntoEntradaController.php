@@ -12,7 +12,7 @@ namespace App\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
 
-class PuntoEntradaController extends BaseController
+class PuntoEntradaController extends AbstractController
 {
 
     /**
@@ -20,24 +20,12 @@ class PuntoEntradaController extends BaseController
      */
     public function lista(Request $request, $modulo, $clase)
     {
-        if (!$this->validarModulo($modulo)) {
-            echo "Módulo no existe!";
-            exit();
-        }
+        $this->moduloActual = $modulo;
+        $this->claseActual = $clase;
+        $this->request = $request;
 
-        if (!$this->validarRepositorio($clase)) {
-            echo "No existe el repositorio!";
-            exit();
-        }
-
-        $repositorio = $this->getDoctrine()->getManager()->getRepository("App:{$this->moduloActual}\\{$this->claseActual}");
-        $data = $repositorio->lista();
-        $paginator = $this->get('knp_paginator');
-
-        return $this->render('/rhu/Factura/lista.html.twig', [
-            'columnas' => $data['columnas'],
-            'datos' => $paginator->paginate($data['query'], $request->query->getInt('page', 1), 30),
-//            'datos' => $data['data'],
+        return $this->render('/generic/lista.html.twig', [
+            'data' => $this->getListaEntidad()
         ]);
     }
 

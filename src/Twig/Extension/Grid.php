@@ -73,10 +73,12 @@ class Grid extends \Twig_Extension {
      * @param Campo[] $campos
      * @param $data[]
      */
-    public function dibujarGrid(\Twig_Environment $env, $campos=[], $data=[]) {
+    public function dibujarGrid(\Twig_Environment $env, $data) {
+        $campos = $data['campos']?? [];
+        $resultados = $data['datos']?? [];
         $cabecera = $this->dibujarEncabezado($campos); # Se llama el método para construir encabezados.
-        $cuerpo = $this->dibujarCuerpo($campos, $data);
-        $paginacion = $this->renderPagination($env, $data);
+        $cuerpo = $this->dibujarCuerpo($campos, $resultados);
+        $paginacion = $this->renderPagination($env, $resultados);
         $salidaHtml = "{$cabecera}{$cuerpo}";
         return $this->tag("table", $salidaHtml, ['border' => 1]) . $paginacion;
     }
@@ -99,6 +101,7 @@ class Grid extends \Twig_Extension {
     private function dibujarColumnas($campos, $entidad) {
         $columnas = [];
         foreach($campos AS $campo) {
+            if($campo->esPk()) continue;
             if(!$campo->esRel()) {
                 $valor = $this->llamarMetodoGet($campo->getNombre(), $entidad);
                 $campo->setValor($valor);
@@ -154,6 +157,7 @@ class Grid extends \Twig_Extension {
         # un string con el html de la celda, es una tecnica de concatenación recomendada por ser más optima.
         $celdas = [];
         foreach ($campos AS $campo) {
+            if($campo->esPk()) continue;
             $celdas[] = $this->tag("th", $campo->getLabel(), ['title' => $campo->getTooltip()]);
         }
         $fila = $this->tag("tr", implode('', $celdas));

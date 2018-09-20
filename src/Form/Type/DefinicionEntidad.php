@@ -70,6 +70,15 @@ abstract  class DefinicionEntidad extends AbstractType {
     }
 
     /**
+     * Función para crear un campo tipo pk.
+     * @param $label
+     * @return Campo
+     */
+    public static function pk($label) {
+        return Campo::nuevoCampo($label)->setTipo(Campo::TIPO_PK)->setEsPk(true);
+    }
+
+    /**
      * Definición de función para retornar la definición de los campos.
      * @return Campo[]
      */

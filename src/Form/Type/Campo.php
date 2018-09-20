@@ -14,25 +14,27 @@ namespace App\Form\Type;
  */
 class Campo
 {
-    const TIPO_STRING = 'string';
-    const TIPO_NUMERO = 'number';
-    const TIPO_DATE = 'date';
+    const TIPO_STRING   = 'string';
+    const TIPO_PK       = 'primary_key';
+    const TIPO_NUMERO   = 'number';
+    const TIPO_DATE     = 'date';
     const TIPO_DATETIME = 'datetime';
-    const TIPO_MONEDA = 'number_format';
+    const TIPO_MONEDA   = 'number_format';
+    private $esPk       = false;
     private $tipo;
     private $nombre;
     private $maximoCaracteres;
-    private $valor = null;
+    private $valor      = null;
     private $formatDate = 'Y-m-d';
     private $formatDateTime = 'Y-m-d H:i:ss';
-    private $decimales = '0';
+    private $decimales  = '0';
     private $separadorDecimal = ',';
     private $separadorMiles = '.';
     private $esRelacion = false;
-    private $relacion = null;
+    private $relacion   = null;
     # Vamos a hacer lo de los labels y los tooltips
-    private $tooltip = null;
-    private $label = null;
+    private $tooltip    = null;
+    private $label      = null;
     private $alineacion = null;
 
     public function __construct($label = "", $tooltip = "")
@@ -60,6 +62,12 @@ class Campo
     public function __toString()
     {
         return $this->nombre;
+    }
+
+    # ahora si me inspiré!
+    public function setEsPk($esPk) {
+        $this->esPk = $esPk;
+        return $this;
     }
 
     /**
@@ -203,5 +211,9 @@ class Campo
     public function getRel()
     {
         return $this->relacion;
+    }
+
+    public function esPk() {
+        return $this->esPk;
     }
 }

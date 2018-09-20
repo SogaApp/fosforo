@@ -34,15 +34,16 @@ class FacturaType extends DefinicionEntidad
         # Labels y tooltips
         # Crear función en twig
         return [
-            'numero' => self::entero("Número"),
-            'facturaTipo' => self::string("Tipo factura")->rel("facturaTipo.nombre"),
-            'nitTercero' => self::entero("Nit")->rel("tercero.nit"),
-            'tercero' => self::string("Tercero")->rel("tercero.nombre"),
-            'pais' => self::string("Pais")->rel("tercero.ciudad.departamento.pais.nombre"),
-            'formaPago' => self::string("Forma de pago")->rel("tercero.formaPago.nombre"),
-            'fecha' => self::fecha("Fecha")->formato("Y/m/d"),
-            'vrSubtotal' => self::moneda("Sub total")->alineacion("r"),
-            'vrTotal' => self::moneda("Total")->formato(2, ",", ".")->alineacion("r"),
+            'codigoFacturaPk' => self::pk("id"),
+            'numero'          => self::entero("Número"),
+            'facturaTipo'     => self::string("Tipo factura")->rel("facturaTipo.nombre"),
+            'nitTercero'      => self::entero("Nit")->rel("tercero.nit"),
+            'tercero'         => self::string("Tercero")->rel("tercero.nombre"),
+            'pais'            => self::string("Pais")->rel("tercero.ciudad.departamento.pais.nombre"),
+            'formaPago'       => self::string("Forma de pago")->rel("tercero.formaPago.nombre"),
+            'fecha'           => self::fecha("Fecha")->formato("Y/m/d"),
+            'vrSubtotal'      => self::moneda("Sub total")->alineacion("r"),
+            'vrTotal'         => self::moneda("Total")->formato(2, ",", ".")->alineacion("r"),
         ];
     }
 }
