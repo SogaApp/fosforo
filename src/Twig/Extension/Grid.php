@@ -132,7 +132,7 @@ class Grid extends \Twig_Extension {
         # empezamos a resolver relaciones recursivamente.
         $arRelacion = $entidad;
         foreach($partes as $nombre) {
-            $nombreRel = "{$nombre}Rel";
+            $nombreRel = $nombre;
             $arRelacion = $this->llamarMetodoGet($nombreRel, $arRelacion);
             if($arRelacion === null) continue;
         }

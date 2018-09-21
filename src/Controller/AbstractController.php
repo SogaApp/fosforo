@@ -56,10 +56,6 @@ abstract class AbstractController extends Controller {
         return $existe;
     }
 
-    protected function validarType($clase) {
-
-    }
-
     /**
      * Esta función inicializa la consulta para litar registros de una entidad.
      * @param $repositorio
@@ -112,7 +108,7 @@ abstract class AbstractController extends Controller {
 
         if (!key_exists($primerAlias, $this->arrRelacionesRegistradas)) { # No existe la relación.
             $aliasRelacion = "{$primerAlias}_{$conteo}";
-            $query->leftJoin("{$alias}.{$primerAlias}Rel", $aliasRelacion);
+            $query->leftJoin("{$alias}.{$primerAlias}", $aliasRelacion);
             $query->addSelect($aliasRelacion);
             $this->arrRelacionesRegistradas[$primerAlias] = $aliasRelacion; # Registramos el alias.
         } else if (key_exists($primerAlias, $this->arrRelacionesRegistradas)) {
@@ -122,7 +118,7 @@ abstract class AbstractController extends Controller {
         foreach ($partes AS $rel) {
             if (!key_exists($rel, $this->arrRelacionesRegistradas)) {
                 $nuevoAliasRelacion = "{$rel}_{$conteo}";
-                $query->leftJoin("{$aliasRelacion}.{$rel}Rel", $nuevoAliasRelacion);
+                $query->leftJoin("{$aliasRelacion}.{$rel}", $nuevoAliasRelacion);
                 $query->addSelect($nuevoAliasRelacion);
                 $this->arrRelacionesRegistradas[$rel] = $nuevoAliasRelacion; # Registramos el alias.
                 $aliasRelacion = $nuevoAliasRelacion;
