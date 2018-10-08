@@ -7,7 +7,8 @@ use Doctrine\ORM\QueryBuilder;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 
-abstract class AbstractController extends Controller {
+abstract class AbstractController extends Controller
+{
     protected $maxRecordsPerPage = 10000;
     protected $arrRelacionesRegistradas = [];
     /**
@@ -37,9 +38,10 @@ abstract class AbstractController extends Controller {
      * @param string $modulo
      * @return bool
      */
-    protected function validarModulo($modulo = '') {
+    protected function validarModulo($modulo = '')
+    {
         $existe = key_exists($modulo, $this->modulos) && $this->modulos[$modulo] !== false;
-        $this->moduloActual = $existe? $this->modulos[$modulo] : null;
+        $this->moduloActual = $existe ? $this->modulos[$modulo] : null;
         return $existe;
     }
 
@@ -48,11 +50,12 @@ abstract class AbstractController extends Controller {
      * @param $clase
      * @return bool
      */
-    protected function validarRepositorio($clase) {
+    protected function validarRepositorio($clase)
+    {
         $nombreRepo = ucfirst($clase);
         $namespace = "\App\Repository\\{$this->moduloActual}\\{$nombreRepo}Repository";
         $existe = class_exists($namespace);
-        $this->claseActual = $existe? $nombreRepo : null;
+        $this->claseActual = $existe ? $nombreRepo : null;
         return $existe;
     }
 
@@ -61,7 +64,8 @@ abstract class AbstractController extends Controller {
      * @param $repositorio
      * @param $alias
      */
-    protected function getQueryLista($repositorio, $alias) {
+    protected function getQueryLista($repositorio, $alias)
+    {
         global $kernel;
         $em = $kernel->getContainer()->get("doctrine.orm.entity_manager");
 //        $em = $this->getDoctrine()->getManager(); # El manager del controller no puede crear queries :/ por eso toca usar ese otro entityManager.
@@ -128,13 +132,14 @@ abstract class AbstractController extends Controller {
         }
     }
 
-    protected function getListaEntidad($modulo=null, $clase=null) {
-        if(!$this->validarModulo($modulo?? $this->moduloActual) || !$this->validarRepositorio($clase?? $this->claseActual)) {
+    protected function getListaEntidad($modulo = null, $clase = null)
+    {
+        if (!$this->validarModulo($modulo ?? $this->moduloActual) || !$this->validarRepositorio($clase ?? $this->claseActual)) {
             throw new \Exception("Módulo o clase invalidos");
         }
         # Si no hubo error se procede a instanciar el repositorio
         $nombreRepositorio = "App:{$this->moduloActual}\\{$this->claseActual}";
-        $this->getQueryLista($nombreRepositorio, "t" );
+        $this->getQueryLista($nombreRepositorio, "t");
         $namespaceType = "\\App\\Form\\Type\\{$this->moduloActual}\\{$this->claseActual}Type";
         $campos = $namespaceType::getCamposLista();
         $this->procesarQueryLista($nombreRepositorio, $campos, "t");
@@ -142,8 +147,14 @@ abstract class AbstractController extends Controller {
         $query = $this->queryLista->getQuery();
         return [
             'campos' => $campos,
-            'datos'  => $paginator->paginate($query, $this->request->query->getInt('page', 1), 30)
+            'datos' => $paginator->paginate($query, $this->request->query->getInt('page', 1), 30)
         ];
+    }
+
+    protected function getFormFiltro($modulo = null, $clase = null)
+    {
+        $namespaceType = "\\App\\Form\\Type\\{$this->moduloActual}\\{$this->claseActual}Type";
+        return $namespaceType::definicionCamposFiltro($this->get("form.factory"));
     }
 
 }

@@ -25,7 +25,8 @@ class PuntoEntradaController extends AbstractController
         $this->request = $request;
 
         return $this->render('/generic/lista.html.twig', [
-            'data' => $this->getListaEntidad()
+            'data' => $this->getListaEntidad(),
+            'form_filtro' => $this->getFormFiltro(),
         ]);
     }
 

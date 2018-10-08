@@ -7,6 +7,7 @@ use App\Form\Type\DefinicionEntidad;
 use Sonata\AdminBundle\Form\Type\Filter\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormFactory;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class FacturaType extends DefinicionEntidad
@@ -49,13 +50,13 @@ class FacturaType extends DefinicionEntidad
         ];
     }
 
-    public static function definicionCamposFiltro(FormBuilderInterface $builder)
+    public static function definicionCamposFiltro(FormFactory $formFactory)
     {
-//        $this->get('form.factory')->createNamedBuilder("Factura", 'form')
-        $form = $builder
+        $form = $formFactory->createNamedBuilder("Factura")
             ->add('numero', NumberType::class)
             ->add('BtnFiltrar', SubmitType::class, array('label' => 'Filtrar'))
-            ->getForm();
+            ->getForm()
+            ->createView();
         return $form;
     }
 }
