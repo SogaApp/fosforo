@@ -5,12 +5,18 @@ namespace App\Controller;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\QueryBuilder;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Form\Extension\Core\Type\FormType;
+use Symfony\Component\Form\FormFactory;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 abstract class AbstractController extends Controller
 {
     protected $maxRecordsPerPage = 10000;
     protected $arrRelacionesRegistradas = [];
+    protected $filtros = [];
+    protected $tableAlias = "t";
+    protected $arrCondicionType = [1 => ">=", 2 => ">", 3 => "=", 4 => "<=", 5 => "<"];
     /**
      * @var QueryBuilder
      */
@@ -82,6 +88,7 @@ abstract class AbstractController extends Controller
      */
     protected function procesarQueryLista($repositorio, $campos = [], $alias = "t")
     {
+        $this->tableAlias = $alias;
         $this->getQueryLista($repositorio, $alias);
         # Construimos los select de la consulta.
         # Por ahora no lo haremos con cada uno de los campos.
@@ -94,7 +101,34 @@ abstract class AbstractController extends Controller
                 $relsCount++;
             }
         }
+        $this->procesarFiltros();
         $this->queryLista->getQuery()->getDQL();
+    }
+
+    /**
+     * @param $query QueryBuilder
+     */
+    protected function procesarFiltros()
+    {
+        foreach ($this->filtros as $nombreCampo => $campo) {
+            $condicion = "=";
+            if ($campo instanceof \DateTime) {
+                $valor = $campo->format("Y-m-d H:i:s");
+                $condicion = ">=";
+            } else if (is_array($campo)) {
+                $valor = $campo['value'] ?? null;
+                if ($valor instanceof \DateTime) {
+                    $valor = $campo['value']->format("Y-m-d H:i:s");
+                }
+                $condicion = $campo['type'] != null ? $this->arrCondicionType[$campo['type']] : $condicion;
+            } else if (is_object($campo)) {
+
+            } else {
+                $valor = $campo;
+            }
+            if (empty($valor)) continue;
+            $this->queryLista->andWhere("{$this->tableAlias}.{$nombreCampo} {$condicion} '{$valor}'");
+        }
     }
 
     /**
@@ -132,11 +166,13 @@ abstract class AbstractController extends Controller
         }
     }
 
-    protected function getListaEntidad($modulo = null, $clase = null)
+    /**
+     * @param null $filtros
+     * @return array
+     * @throws \Exception
+     */
+    protected function getListaEntidad($filtros = null)
     {
-        if (!$this->validarModulo($modulo ?? $this->moduloActual) || !$this->validarRepositorio($clase ?? $this->claseActual)) {
-            throw new \Exception("Módulo o clase invalidos");
-        }
         # Si no hubo error se procede a instanciar el repositorio
         $nombreRepositorio = "App:{$this->moduloActual}\\{$this->claseActual}";
         $this->getQueryLista($nombreRepositorio, "t");
@@ -145,16 +181,44 @@ abstract class AbstractController extends Controller
         $this->procesarQueryLista($nombreRepositorio, $campos, "t");
         $paginator = $this->get('knp_paginator');
         $query = $this->queryLista->getQuery();
+
         return [
             'campos' => $campos,
             'datos' => $paginator->paginate($query, $this->request->query->getInt('page', 1), 30)
         ];
     }
 
+    /**
+     * @param null $modulo
+     * @param null $clase
+     * @return mixed
+     * @throws \Exception
+     */
     protected function getFormFiltro($modulo = null, $clase = null)
     {
+        if (!$this->validarModulo($modulo ?? $this->moduloActual) || !$this->validarRepositorio($clase ?? $this->claseActual)) {
+            throw new \Exception("Módulo o clase invalidos");
+        }
         $namespaceType = "\\App\\Form\\Type\\{$this->moduloActual}\\{$this->claseActual}Type";
         return $namespaceType::definicionCamposFiltro($this->get("form.factory"));
+    }
+
+    /**
+     * @param $form FormInterface
+     * @throws \Exception
+     */
+    protected function filtrar($form)
+    {
+        $form->handleRequest($this->request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $this->filtros = $form->getData();
+//            foreach ($arDataForm as $nombreCampo=>$campo) {
+//                $this->filtros
+//            }
+//            $this->getListaEntidad($arDataForm);
+//            var_dump($arDataForm);
+//            exit();
+        }
     }
 
 }

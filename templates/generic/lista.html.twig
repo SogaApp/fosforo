@@ -1,10 +1,12 @@
 {% extends 'base.html.twig' %}
 {% block body %}
     <div>
+        {{ form_start(form_filtro) }}
         {{ filtros_grilla(form_filtro) }}
+        {{ form_end(form_filtro) }}
     </div>
 
     <div class="table-responsive">
-    {{ grilla(data) }}
+        {{ grilla(data) }}
     </div>
 {% endblock %}

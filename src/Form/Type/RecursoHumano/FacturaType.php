@@ -4,7 +4,12 @@ namespace App\Form\Type\RecursoHumano;
 
 use App\Entity\RecursoHumano\Factura;
 use App\Form\Type\DefinicionEntidad;
+use Doctrine\ORM\EntityRepository;
+use Sonata\AdminBundle\Form\Type\Filter\DateTimeType;
 use Sonata\AdminBundle\Form\Type\Filter\NumberType;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormFactory;
@@ -52,11 +57,25 @@ class FacturaType extends DefinicionEntidad
 
     public static function definicionCamposFiltro(FormFactory $formFactory)
     {
+        $arrayPropiedadesFacturaTipo = array(
+            'class' => 'App:RecursoHumano\FacturaTipo',
+            'query_builder' => function (EntityRepository $er) {
+                return $er->createQueryBuilder('ft')
+                    ->orderBy('ft.nombre', 'ASC');
+            },
+            'choice_label' => 'nombre',
+            'required' => false,
+            'empty_data' => "",
+            'placeholder' => "TODOS",
+            'data' => ""
+        );
+
         $form = $formFactory->createNamedBuilder("Factura")
-            ->add('numero', NumberType::class)
+            ->add('numero', NumberType::class, ['required' => false,])
+            ->add("fecha", DateTimeType::class, ['required' => false, 'data' => null])
+            ->add("facturaTipoRel", EntityType::class, $arrayPropiedadesFacturaTipo)
             ->add('BtnFiltrar', SubmitType::class, array('label' => 'Filtrar'))
-            ->getForm()
-            ->createView();
+            ->getForm();
         return $form;
     }
 }
